@@ -1,13 +1,16 @@
 import string
 
-
+itemList = []
+roomList = []
+room2DoorNorth = 0
+room2DoorSouth = 0
+gameover = 0
 class Room():
 	"""docstring for Room"""
 	def __init__(self):
 		self.desc = []
 		self.items = []
-itemList = []
-roomList = []
+
 class Player():
 	"""docstring for ClassName"""
 	def __init__(self):
@@ -15,7 +18,7 @@ class Player():
 		self.curRoom = ""
 		self.curDir = ""
 		self.inv = []
-		self.takenInv = []
+		self.usedInv = []
 		self.armorScore = 0
 		self.weaponScore = 0
 		self.Score = 0
@@ -27,21 +30,9 @@ class Item():
 		self.scoreVal = 0
 		self.armorVal = 0
 		self.dir = ""
-		self.weaponVal = 0		
+		self.weaponVal = 0
+		self.taken = "contgrats you've taken " + self.name		
 
-
-if(direction == north):
-    printNow("Looking North, you see nothing interesting.") 
-  if(direction == south):
-    printNow("Looking South, you see a door.") 
-  if(direction == east):
-    printNow("Looking East, you see the cast-iron tub sitting along a diagonal wall.") 
-    if (taken.count(wadOHair) == 0):
-      printNow("In the tub you see a disgusting wad of hair.")
-    if (taken.count(clothes) == 0):
-      printNow("You see your clothes folded neatly at the base of the tub.")    
-  if(direction == west):
-    printNow("Looking west, you see a sink on a pedestal with a slowly dripping faucet.  You hear the faint sound of music coming from the other side of the wall. ") 
 def initItems():
 	item0 = Item()
 	item1 = Item()
@@ -79,6 +70,13 @@ def initItems():
 	item6.name ="bomb"
 	item6.dir = -1
 
+	itemList.append(item0)
+	itemList.append(item1)
+	itemList.append(item2)
+	itemList.append(item3)
+	itemList.append(item4)
+	itemList.append(item5)
+	itemList.append(item6)
 
 def initRooms():
 	room0 = Room()
@@ -95,7 +93,7 @@ def initRooms():
 	room1.desc.append("Looking East, you notice a boreded up window that allows just a small amount of light in the room.") 
 	room1.desc.append("Looking South, you see a desk") 
 	room1.desc.append("Looking west, you see a slightly opened door which is red")
-	room1.items.append(itemList[0])
+	room1.items.append(itemList[2])
 	roomList.append(room1)
 
 	room2 = Room()
@@ -151,16 +149,164 @@ def initRooms():
 	roomList.append(room8)
 
 
+def doorHandler():
+	global room2DoorNorth
+	global room2DoorSouth
+	global gameover
+	if p.curRoom == roomList[0] and p.curDir == 2:
+		p.curRoom = roomList[1]
+		return
+	if p.curRoom == roomList[1] and p.curDir == 0:
+		p.curRoom = roomList[0]
+		return
+	if p.curRoom == roomList[1] and p.curDir == 3:
+		p.curRoom = roomList[2]
+		return
+	if p.curRoom == roomList[2] and p.curDir == 1:
+		p.curRoom = roomList[1]
+		return
+	if p.curRoom == roomList[2] and p.curDir == 3:
+		p.curRoom = roomList[3]
+		return
+	if p.curRoom == roomList[2] and p.curDir == 0:
+		if room2DoorNorth == 0:
+			print "The door to the north is locked and impassable."
+			return
+		else:
+			p.curRoom = roomList[5]
+			return
+	if p.curRoom == roomList[2] and p.curDir == 2:
+		if room2DoorSouth == 0:
+			print "You must figure out the three digit combination to unlock this door.  There is no way to force it."
+			subaction = raw_input("The combination lock is a spinner with 3 numbers.  You can put in 000 to 999.  What do you want to try: ")
+			if "680" in subaction:
+				room2DoorSouth = 1
+				print "The lock openned!"
+			else:
+				print "The lock doesn't budge."
+			return
+		else:
+			p.curRoom = roomList[7]
+			return
 
+	if p.curRoom == roomList[3]:
+		if p.curDir == 0:
+			p.curRoom = roomList[4]
+			return
+		if p.curDir == 1:
+			p.curRoom = roomlist[2]
+			return
+		return
+	if p.curRoom == roomList[4]:
+		if p.curDir == 1:
+			p.curRoom = roomList[5]
+		if p.curDir == 2:
+			p.curRoom = roomList[3]
+		return
+	if p.curRoom == roomList[5]:
+		if p.curDir == 2 and room2DoorNorth == 0:
+			print "You see a door with a deadbolt that can be unlocked from this side."
+			subaction = raw_input ("Would you like to unlock the door? [y/n]")
+			if "y" in subaction:
+				room2DoorNorth = 1
+				print "You unlock the door."
+			return
+		if p.curDir == 2 and room2DoorNorth == 1:
+			p.curRoom = roomList[2]
+			return
+		if p.curDir == 3:
+			p.curRoom = roomList[4]
+			return
+		return
+	if p.curRoom == roomList[7]:
+		if p.curDir == 0:
+			p.curRoom = roomList[2]
+		if p.curDir == 1:
+			p.curRoom = roomList[8]
+		if p.curDir == 2:
 
+			if len(p.inv) == 6:
+				print "you lay out all the resources you've collected at the base of the door." 
+				print "Before you realize what you are doing you've assembled the items into a bomb and placed it in the open doorway"
+				print "you retreat to another room."
+				print "You hear a loud bang followed by the sound of falling rubble"
+				print "you go back into the room to see if worked."
+				print "SUCCESS! as the cloud clears you see the man with a mullet from the pictures, he is much older now but you suddenly remeber who you are!"
+				print "You are Mcguyvers grandchild"
+				print "Mycyver with a tear in his eye comes and give you a hug, happy that his grandchild can fullfil the destiny and become the heir to his knowledge"
+				print "you win!"
+				gameover = 1
+				return 
+		return
+	if p.curRoom == roomList[8]:
+		if p.curDir == 3:
+			p.curRoom = roomList[7]
+		return
 
+p = Player()
 
 def playGame():
-	p = Player()
-	p.name = raw_input("You think your name might be..")
-
+	global gameover
+	east = "east"
+	west = "west"
+	north = "north"
+	south = "south"
+	help = "help"
+	action ="rabbits"
 	initItems()
 	initRooms()
+
+	print("You awake from what seemed like an endless dream.  Groggy-eyed, you wonder who you are.") 
+	p.name = raw_input("You think your name might be..")
+	print("Still hazy on who you are, and how you got here, you take in your surroundings.") 
+	p.curDir = 1
+	p.curRoom = roomList[0]
+	while gameover == 0:
+		print p.curRoom.desc[p.curDir]
+		for item in p.curRoom.items:
+			if item.dir == p.curDir:
+				print item.desc
+		action = raw_input("what would you like to do?")
+		action = action.lower()
+		if help in action:
+			print "you can use the commands PUT GO LOOK TAKE"
+			print "you are in room " + str(roomList.index(p.curRoom))
+		elif "look" in action:
+			if east in action:
+				p.curDir = 1
+				
+			elif west in action:
+				p.curDir = 3
+				
+			elif north in action:
+				p.curDir = 0
+				
+			elif south in action:
+				p.curDir = 2
+				
+			for item in p.curRoom.items:
+				if p.curDir == item.dir:
+					print item.desc
+		elif "go" in action:
+			if east in action:
+				p.curDir = 1
+			elif west in action:
+				p.curDir = 3
+			elif north in action:
+				p.curDir = 0
+			elif south in action:
+				p.curDir = 2
+			doorHandler()
+		elif "take" in action:
+			for item in p.curRoom.items:
+				print item.name
+				if item.name in action:
+					p.inv.append(item)
+					p.curRoom.items.remove(item)
+					print item.taken
+		
+
+
 
 
 
