@@ -26,6 +26,13 @@ wadOHair = "wadOHair"
 clothes = "clothes" 
 paperClip = "paperclip"
 
+class Item:
+  name = ""
+  room = 0
+  direction = ""
+  taken = false
+
+def
 
 class Player:
   #player class
