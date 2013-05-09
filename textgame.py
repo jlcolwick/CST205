@@ -256,9 +256,9 @@ def playGame():
 	initItems()
 	initRooms()
 
-	print("You awake from what seemed like an endless dream.  Groggy-eyed, you wonder who you are.") 
+	print("You awake from what seemed like an endless dream.  Naked and Groggy-eyed, you wonder who you are.") 
 	p.name = raw_input("You think your name might be..")
-	print("Still hazy on who you are, and how you got here, you take in your surroundings.") 
+	print("Still hazy on who you are, and how you got here, you climb out of the tub")
 	p.curDir = 1
 	p.curRoom = roomList[0]
 	while gameover == 0:
@@ -269,8 +269,7 @@ def playGame():
 		action = raw_input("what would you like to do?")
 		action = action.lower()
 		if help in action:
-			print "you can use the commands PUT GO LOOK TAKE"
-			print "you are in room " + str(roomList.index(p.curRoom))
+			print "you can use the commands GO LOOK TAKE"
 		elif "look" in action:
 			if east in action:
 				p.curDir = 1
